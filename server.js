@@ -21,11 +21,27 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-client.connect((err) => {
-  const collection = client.db('bikeInventories').collection('inventories');
-  // perform actions on the collection object
-  client.close();
-});
+
+// run function
+const run = async () => {
+  try {
+    await client.connect();
+    const bikeInventoriesCollection = client
+      .db('bikeInventories')
+      .collection('inventories');
+
+    // loading all inventories data
+    app.get('/bikeinventories', async (req, res) => {
+      const query = {};
+      const cursor = bikeInventoriesCollection.find(query);
+      const bikeInventory = await cursor.toArray();
+      res.send(bikeInventory);
+    });
+  } finally {
+    // await client.close();
+  }
+};
+run().catch(console.dir);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
