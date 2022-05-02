@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -36,6 +36,14 @@ const run = async () => {
       const cursor = bikeInventoriesCollection.find(query);
       const bikeInventory = await cursor.toArray();
       res.send(bikeInventory);
+    });
+
+    // loadding single data
+    app.get(`/bikeinventory/:bikeInventoryId`, async (req, res) => {
+      const id = req.params.bikeInventoryId;
+      const query = { _id: ObjectId(id) };
+      const inventory = await bikeInventoriesCollection.findOne(query);
+      res.send(inventory);
     });
   } finally {
     // await client.close();
