@@ -38,12 +38,32 @@ const run = async () => {
       res.send(bikeInventory);
     });
 
-    // loadding single data
-    app.get(`/bikeinventory/:bikeInventoryId`, async (req, res) => {
+    // loading single inventory data
+    app.get('/bikeinventory/:bikeInventoryId', async (req, res) => {
       const id = req.params.bikeInventoryId;
       const query = { _id: ObjectId(id) };
       const inventory = await bikeInventoriesCollection.findOne(query);
       res.send(inventory);
+    });
+
+    // updating inventory data
+    app.put('/bikeinventory/:bikeInventoryId', async (req, res) => {
+      const id = req.params.bikeInventoryId;
+      const updateQuantity = req.body;
+      console.log(updateQuantity);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity: updateQuantity.quantity,
+        },
+      };
+      const updateResult = await bikeInventoriesCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(updateResult);
     });
   } finally {
     // await client.close();
