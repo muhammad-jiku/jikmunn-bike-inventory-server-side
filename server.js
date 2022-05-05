@@ -74,6 +74,16 @@ const run = async () => {
       );
       res.send(updateResult);
     });
+
+    // delete inventory from server
+    app.delete('/bikeinventory/:bikeInventoryId', async (req, res) => {
+      const id = req.params.bikeInventoryId;
+      const query = { _id: ObjectId(id) };
+      const deleteInventoryResult = await bikeInventoriesCollection.deleteOne(
+        query
+      );
+      res.send(deleteInventoryResult);
+    });
   } finally {
     // await client.close();
   }
