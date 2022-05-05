@@ -46,6 +46,15 @@ const run = async () => {
       res.send(inventory);
     });
 
+    // adding inventory to database
+    app.post('/bikeinventory', async (req, res) => {
+      const newBikeInventory = req.body;
+      const result = await bikeInventoriesCollection.insertOne(
+        newBikeInventory
+      );
+      res.send(result);
+    });
+
     // updating inventory data
     app.put('/bikeinventory/:bikeInventoryId', async (req, res) => {
       const id = req.params.bikeInventoryId;
