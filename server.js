@@ -24,8 +24,8 @@ const verifyToken = (req, res, next) => {
     }
     req.decoded = decoded;
     console.log('Decoded : ', decoded);
+    next();
   });
-  next();
 };
 
 app.get('/', (req, res) => {
