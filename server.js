@@ -46,6 +46,16 @@ const run = async () => {
       res.send(inventory);
     });
 
+    // displaying inventory data according to added by email
+    app.get('/bikeinventory', async (req, res) => {
+      const email = req.query.email;
+      console.log(email);
+      const query = { email };
+      const cursor = bikeInventoriesCollection.find(query);
+      const items = await cursor.toArray();
+      res.send(items);
+    });
+
     // adding inventory to database
     app.post('/bikeinventory', async (req, res) => {
       const newBikeInventory = req.body;
