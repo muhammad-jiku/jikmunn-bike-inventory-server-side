@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const jwt = require('jsonwebtoken');
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -9,6 +10,12 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
+
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  console.log('token: ', authHeader);
+  next();
+};
 
 app.get('/', (req, res) => {
   res.send('Hello there! welcome');
@@ -30,6 +37,15 @@ const run = async () => {
       .db('bikeInventories')
       .collection('inventories');
 
+    // authentication jwt
+    app.post('/login', async (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1d',
+      });
+      res.send({ accessToken });
+    });
+
     // loading all inventories data
     app.get('/bikeinventories', async (req, res) => {
       const query = {};
@@ -47,7 +63,7 @@ const run = async () => {
     });
 
     // displaying inventory data according to added by email
-    app.get('/bikeinventory', async (req, res) => {
+    app.get('/bikeinventory', verifyToken, async (req, res) => {
       const email = req.query.email;
       console.log(email);
       const query = { email };
