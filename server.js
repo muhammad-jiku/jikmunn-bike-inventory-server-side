@@ -13,7 +13,18 @@ app.use(express.json());
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ message: 'Unauthorized access' });
+  }
   console.log('token: ', authHeader);
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: 'Forbidden acess' });
+    }
+    req.decoded = decoded;
+    console.log('Decoded : ', decoded);
+  });
   next();
 };
 
@@ -64,12 +75,17 @@ const run = async () => {
 
     // displaying inventory data according to added by email
     app.get('/bikeinventory', verifyToken, async (req, res) => {
+      const decodedEmail = req.decoded.email;
       const email = req.query.email;
       console.log(email);
-      const query = { email };
-      const cursor = bikeInventoriesCollection.find(query);
-      const items = await cursor.toArray();
-      res.send(items);
+      if (email === decodedEmail) {
+        const query = { email };
+        const cursor = bikeInventoriesCollection.find(query);
+        const items = await cursor.toArray();
+        res.send(items);
+      } else {
+        res.status(403).send({ message: 'Forbidden access' });
+      }
     });
 
     // adding inventory to database
