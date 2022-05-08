@@ -101,7 +101,7 @@ const run = async () => {
     app.put('/bikeinventory/:bikeInventoryId', async (req, res) => {
       const id = req.params.bikeInventoryId;
       const updateQuantity = req.body;
-      // console.log(updateQuantity);
+      console.log(updateQuantity);
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
