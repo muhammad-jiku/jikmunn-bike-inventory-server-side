@@ -16,14 +16,14 @@ const verifyToken = (req, res, next) => {
   if (!authHeader) {
     return res.status(401).send({ message: 'Unauthorized access' });
   }
-  console.log('token: ', authHeader);
+  // console.log('token: ', authHeader);
   const token = authHeader.split(' ')[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).send({ message: 'Forbidden acess' });
     }
     req.decoded = decoded;
-    console.log('Decoded : ', decoded);
+    // console.log('Decoded : ', decoded);
     next();
   });
 };
@@ -77,7 +77,7 @@ const run = async () => {
     app.get('/bikeinventory', verifyToken, async (req, res) => {
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
-      console.log(email);
+      // console.log(email);
       if (email === decodedEmail) {
         const query = { email };
         const cursor = bikeInventoriesCollection.find(query);
@@ -101,7 +101,7 @@ const run = async () => {
     app.put('/bikeinventory/:bikeInventoryId', async (req, res) => {
       const id = req.params.bikeInventoryId;
       const updateQuantity = req.body;
-      console.log(updateQuantity);
+      // console.log(updateQuantity);
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
