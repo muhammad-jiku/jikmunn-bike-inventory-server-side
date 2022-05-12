@@ -48,7 +48,7 @@ const run = async () => {
       .db('bikeInventories')
       .collection('inventories');
     const testimonialsCollection = client
-      .db('testimonials')
+      .db('tesitmonials')
       .collection('testimonial');
 
     // authentication jwt
