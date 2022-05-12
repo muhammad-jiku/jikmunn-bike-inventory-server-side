@@ -51,6 +51,8 @@ const run = async () => {
       .db('tesitmonials')
       .collection('testimonial');
 
+    const imagesCollection = client.db('images').collection('image');
+
     // authentication jwt
     app.post('/login', async (req, res) => {
       const user = req.body;
@@ -97,6 +99,14 @@ const run = async () => {
       const cursor = testimonialsCollection.find(query);
       const testimonial = await cursor.toArray();
       res.send(testimonial);
+    });
+
+    // images data
+    app.get('/images', async (req, res) => {
+      const query = {};
+      const cursor = imagesCollection.find(query);
+      const image = await cursor.toArray();
+      res.send(image);
     });
 
     // adding inventory to database
