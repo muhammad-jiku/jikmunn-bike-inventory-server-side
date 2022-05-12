@@ -47,6 +47,9 @@ const run = async () => {
     const bikeInventoriesCollection = client
       .db('bikeInventories')
       .collection('inventories');
+    const testimonialsCollection = client
+      .db('testimonials')
+      .collection('testimonial');
 
     // authentication jwt
     app.post('/login', async (req, res) => {
@@ -86,6 +89,14 @@ const run = async () => {
       } else {
         res.status(403).send({ message: 'Forbidden access' });
       }
+    });
+
+    // testimonials data
+    app.get('/testimonials', async (req, res) => {
+      const query = {};
+      const cursor = testimonialsCollection.find(query);
+      const testimonial = await cursor.toArray();
+      res.send(testimonial);
     });
 
     // adding inventory to database
