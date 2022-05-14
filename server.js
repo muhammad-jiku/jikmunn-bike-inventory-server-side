@@ -52,6 +52,7 @@ const run = async () => {
       .collection('testimonial');
     const imagesCollection = client.db('images').collection('image');
     const servicesCollection = client.db('services').collection('service');
+    const myCollections = client.db('myCollections').collection('myCollection');
 
     // authentication jwt
     app.post('/login', async (req, res) => {
@@ -110,11 +111,19 @@ const run = async () => {
     });
 
     // services data displaying
-    app.get('/servicess', async (req, res) => {
+    app.get('/services', async (req, res) => {
       const query = {};
       const cursor = servicesCollection.find(query);
       const service = await cursor.toArray();
       res.send(service);
+    });
+
+    // services data displaying
+    app.get('/mycollections', async (req, res) => {
+      const query = {};
+      const cursor = myCollections.find(query);
+      const myCollection = await cursor.toArray();
+      res.send(myCollection);
     });
 
     // adding inventory to database
