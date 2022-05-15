@@ -16,14 +16,14 @@ const verifyToken = (req, res, next) => {
   if (!authHeader) {
     return res.status(401).send({ message: 'Unauthorized access' });
   }
-  console.log('token: ', authHeader);
+
   const token = authHeader.split(' ')[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).send({ message: 'Forbidden acess' });
     }
     req.decoded = decoded;
-    // console.log('Decoded : ', decoded);
+
     next();
   });
 };
@@ -83,7 +83,7 @@ const run = async () => {
     app.get('/bikeinventory', verifyToken, async (req, res) => {
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
-      // console.log(email);
+
       if (email === decodedEmail) {
         const query = { email };
         const cursor = bikeInventoriesCollection.find(query);
@@ -94,7 +94,7 @@ const run = async () => {
       }
     });
 
-    // testimonials data
+    // testimonials data displaying
     app.get('/testimonials', async (req, res) => {
       const query = {};
       const cursor = testimonialsCollection.find(query);
@@ -102,7 +102,7 @@ const run = async () => {
       res.send(testimonial);
     });
 
-    // images data
+    // images data displaying
     app.get('/images', async (req, res) => {
       const query = {};
       const cursor = imagesCollection.find(query);
@@ -110,7 +110,7 @@ const run = async () => {
       res.send(image);
     });
 
-    // services data displaying
+    // services data displaying data
     app.get('/services', async (req, res) => {
       const query = {};
       const cursor = servicesCollection.find(query);
@@ -118,7 +118,7 @@ const run = async () => {
       res.send(service);
     });
 
-    // services data displaying
+    // collections data displaying
     app.get('/mycollections', async (req, res) => {
       const query = {};
       const cursor = myCollections.find(query);
@@ -139,7 +139,6 @@ const run = async () => {
     app.put('/bikeinventory/:bikeInventoryId', async (req, res) => {
       const id = req.params.bikeInventoryId;
       const updateQuantity = req.body;
-      // console.log(updateQuantity);
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
